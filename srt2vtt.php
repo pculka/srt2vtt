@@ -11,7 +11,7 @@ if (file_exists("srt2vtt.conf.php"))
 try {
     // access the get, check for valid filename
     $fn  = filter_input(INPUT_GET, "i", FILTER_VALIDATE_REGEXP, array( "options" => array( "regexp" => '%^[^"<>|:*?/]+\.srt$%m') ) );
-    $fn = 'Game of Thrones - S04E01.CZ.srt';
+
     if ($fn === false) {
         throw new Exception(_("Specified input is invalid"));
     }
