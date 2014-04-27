@@ -4,16 +4,24 @@
  * Date: 27.4.2014
  * Time: 19:14
  */
-$srt2vttConf = array();
+
+// default configuration
+$srt2vttConf = array(
+    "appendCopyrightInfo"   => false,
+    "autoConvertEncoding"   => true,                                                   // not yet implemented
+    "sourceEncodingList"    => array('ISO-8859-1', 'Windows-1252', 'ASCII', 'UTF-8' ), // not yet implemented
+    "debug"                 => true,
+);
 if (file_exists("srt2vtt.conf.php"))
     require_once("srt2vtt.conf.php");
 
 try {
     // access the get, check for valid filename
-    $fn  = filter_input(INPUT_GET, "i", FILTER_VALIDATE_REGEXP, array( "options" => array( "regexp" => '%^[^"<>|:*?/]+\.srt$%m') ) );
+    $file = realpath(html_entity_decode($_GET['i']));
+    $fn  = filter_var($file, FILTER_VALIDATE_REGEXP, array( "options" => array( "regexp" => '%^[^"<>|:*?]+\.srt$%m') ) );
 
     if ($fn === false) {
-        throw new Exception(_("Specified input is invalid"));
+        throw new Exception(_("Specified subtitle source is invalid"));
     }
 
     if (file_exists($fn)) {
@@ -78,13 +86,20 @@ try {
     }
 
 } catch (Exception $e) {
-    var_dump( $e->getMessage() );
-    // append the message as a subtitle lasting 5 hours (to notify the user about the error within video)
-    // #todo
+    header('Content-type: text/plain; charset=utf-8');
+    $result = "WEBVTT\n\n\n";
+    $result .= "1\n";
+    $result .= "00:00:00.000 --> 00:10:00.000\n";
+    $result .= $e->getMessage()."\n\n\n";
+    $subNum = 2;
+    echo $result;
 } finally {
     // append information if configured
-    // #todo
-
-
+    // #todo: get highest sub number, increment, add specified amount of wait time and display the disclaimer (if specified);
+    if ($srt2vttConf['appendCopyrightInfo']) {
+        echo (int)$subNum."\n";
+        echo "00:00:00.001 --> 00:10:00.000\n";
+        echo "compiled by srt2vtt by pculka";
+    }
 
 }
