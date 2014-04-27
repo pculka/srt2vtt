@@ -4,6 +4,8 @@
  * Date: 27.4.2014
  * Time: 19:14
  */
+if (file_exists("srt2vtt.conf.php"))
+    require_once("srt2vtt.conf.php");
 
 try {
     // access the get, check for valid filename
@@ -24,7 +26,8 @@ try {
     var_dump( $e->getMessage() );
 
 } finally {
+    // append information if configured
+
+
 
 }
-
-?>
