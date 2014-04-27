@@ -23,7 +23,7 @@ try {
         if (empty($subtitleLines)) throw new Exception(_("Subtitle file empty"));
         // prepare the result
 
-        $result = "WEBVTT\n\n";
+        $result = "WEBVTT\n\n\n";
         define('SRT_STATE_SUBNUMBER', 0);
         define('SRT_STATE_TIME',      1);
         define('SRT_STATE_TEXT',      2);
@@ -65,8 +65,8 @@ try {
 
         foreach ($subs as $sub) {
             $result .= $sub->number."\n";
-            $result .= $sub->startTime." --> ".$sub->stopTime."\n";
-            $result .= $sub->text."\n";
+            $result .= str_replace(',', '.', $sub->startTime)." --> ".str_replace(',', '.', $sub->stopTime)."\n";
+            $result .= $sub->text."\n\n";
         }
 
 
